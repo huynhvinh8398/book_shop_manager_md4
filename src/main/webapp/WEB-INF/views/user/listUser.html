@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<!--    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="/assets/font-awesome/css/all.css">
+
+    <th:block th:replace="/layout/head :: head" />
+</head>
+
+<body>
+<div id="wrapper" style="margin-bottom: 230px">
+    <!--header-->
+    <div class="header">
+
+        <th:block th:replace="/layout/header :: header" />
+    </div>
+    <!--end header-->
+
+    <!--sidebar-->
+    <div class="side-bar">
+        <th:block th:replace="/layout/sidebar :: sidebar" />
+
+    </div>
+    <!--end sidebar-->
+
+    <!--main content-->
+    <div class="content-page">
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <button id="addCustomer" class="btn btn-outline-primary btn-add"
+                    style="margin-left: 15px">
+                <i class="fa fa-plus"></i> Add new Customer
+            </button>
+
+        </div><!-- End Page Title -->
+
+        <section class="section dashboard">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-box">
+                        <div class="responsive-table-plugin">
+                            <div class="table-rep-plugin">
+                                <div class="table-responsive" data-pattern="priority-columns">
+                                    <table id="tech-companies-1" class="table table-hover tbCustomer">
+                                        <thead>
+                                        <tr style="background-color: #9ce9">
+                                            <th>Id</th>
+                                            <th>UserName</th>
+                                            <th>Name</th>
+                                            <th >Phone</th>
+                                            <th >Email</th>
+                                            <th >Address</th>
+                                            <th >Role</th>
+                                            <th >Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>abc</td>
+                                            <td>vinh huynh</td>
+                                            <td>121212</td>
+                                            <td>dfdff@gmail.com</td>
+                                            <td>hue</td>
+                                            <td>block</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>abc</td>
+                                            <td>vinh huynh</td>
+                                            <td>121212</td>
+                                            <td>dfdff@gmail.com</td>
+                                            <td>hue</td>
+                                            <td>block</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>abc</td>
+                                            <td>vinh huynh</td>
+                                            <td>121212</td>
+                                            <td>dfdff@gmail.com</td>
+                                            <td>hue</td>
+                                            <td>block</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>abc</td>
+                                            <td>vinh huynh</td>
+                                            <td>121212</td>
+                                            <td>dfdff@gmail.com</td>
+                                            <td>hue</td>
+                                            <td>block</td>
+                                            <td></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    </div>
+    <!-- End #main -->
+    <!--end main content-->
+</div>
+
+<!--footer-->
+<th:block th:replace="/layout/footer :: #footer" />
+<!--end footer-->
+
+<!--script-->
+<th:block th:replace="/layout/script :: script" />
+<!--end script-->
+</body>
+</html>

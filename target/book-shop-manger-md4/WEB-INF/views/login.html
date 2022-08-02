@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<!--    <link rel="stylesheet" href="/assets/css/sweetalert2.min.css">-->
+    <link rel="stylesheet" href="/assets/css/iziToast-1.4.0.min.css">
+    <link rel="stylesheet" href="/assets/css/login1.css">
+
+</head>
+<body>
+
+<div class="container" id="container">
+    <div class="form-container sign-up-container">
+        <form action="#" class="form" id="formSignUp">
+            <h1>Create Account</h1>
+            <select name="role" id="role" class="form-select" placeholder="Role" >
+                <option value="1">ADMIN</option>
+                <option value="2">USER</option>
+            </select>
+            <input type="text" id="usernameReg" name="usernameReg" placeholder="Username" />
+            <input type="password" id="passwordReg" name="passwordReg" placeholder="Password" />
+            <input type="password" id="rePasswordReg" placeholder="Confirm Password" />
+            <button id="btn_sign_up" class="btn">SIGN UP</button>
+        </form>
+    </div>
+    <div class="form-container sign-in-container">
+        <form action="#" class="form" id="formLogin">
+            <h1>Log In</h1>
+            <input type="email" id="usernameLogin" name="usernameLogin" placeholder="Username" />
+            <input type="password" id="passwordLogin" name="passwordLogin" placeholder="Password" />
+            <a href="#">Forgot your password?</a>
+            <button id="btn_login" class="btn">LOGIN</button>
+        </form>
+    </div>
+    <div class="overlay-container">
+        <div class="overlay">
+            <div class="overlay-panel overlay-left">
+                <h1>Welcome Back!</h1>
+                <p>To keep connected with us please login with your personal info</p>
+                <button class="btn btn-signIn" id="signIn">Sign In</button>
+            </div>
+            <div class="overlay-panel overlay-right">
+                <h1>Hello, Friend!</h1>
+                <p>Enter your personal details and start journey with us</p>
+                <button class="btn" id="signUp">Sign Up</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/login1.js"></script>
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
+<script src="/assets/js/app.js"></script>
+<!--<script src="/assets/js/sweetalert2.min.js"></script>-->
+<script src="/assets/js/iziToast-1.4.0.js"></script>
+
+<script>
+
+    <!--    đăng nhập-->
+    let btnLogin = $("#btn_login");
+    btnLogin.on("click", () => {
+        let username = $("#usernameLogin").val();
+        let password = $("#passwordLogin").val();
+
+        let user = {
+            username: username,
+            password: password
+        }
+
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "POST",
+            "url": "http://localhost:8080/api/auth/login",
+            "data": JSON.stringify(user)
+        })
+            .done((data) => {
+                App.IziToast.showSuccessAlert("Đăng nhập thành công")
+                setTimeout(() => {
+                    window.location.href = "/homepage";
+                }, 2000);
+            })
+            .fail((jqXHR) => {
+                App.IziToast.showErrorAlert("Đăng nhập thất bại")
+
+            })
+    })
+
+
+    //đăng ký //
+
+    let btnRegister = $("#btn_sign_up");
+
+    btnRegister.on("click", () => {
+
+        let username = $("#usernameReg").val();
+        let password = $("#passwordReg").val();
+        let passwordcp = $("#rePasswordReg").val();
+        let roleId = $("#role").val();
+
+        let user = {
+            username: username,
+            password: password,
+            role: {
+                id: roleId
+            }
+        }
+        if(password !== passwordcp){
+            App.IziToast.showErrorAlert("Tạo Thất Bại Vui Lòng Nhập đúng Password trên và dưới!")
+            return;
+        }
+
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "POST",
+            "url": "http://localhost:8080/api/auth/register",
+            "data": JSON.stringify(user)
+        })
+        .done((data) => {
+            console.log(user)
+            $("#usernameLogin").val(username);
+            $("#passwordLogin").val(password);
+            App.IziToast.showSuccessAlert("đăng kí thành công")
+            setTimeout(() => {
+                $(".btn-signIn").click();
+            }, 2000);
+        })
+        .fail((jqXHR) => {
+           App.IziToast.showErrorAlert("đăng kí thất bại")
+        })
+    });
+
+</script>
+
+</body>
+</html>
