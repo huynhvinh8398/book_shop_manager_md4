@@ -2,14 +2,17 @@
 
 <th:block th:fragment="modal_update">
     <div id="modalUpdateProduct" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Product information</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="modal-alert-danger hide"></div>
+                    <div class="modal-alert-danger hide">
+
+
+                    </div>
 
                     <form id="frmUpdateProduct" method="post">
                         <fieldset class="row g-3">
@@ -23,11 +26,11 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label" for="amountUp">Amount</label>
-                                <input type="text" class="form-control" id="amountUp" name="amountUp">
+                                <input type="number" class="form-control" id="amountUp" name="amountUp">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="priceUp">Price</label>
-                                <input type="text" class="form-control" id="priceUp" name="priceUp">
+                                <input type="number" class="form-control" id="priceUp" name="priceUp">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="categoryUp">Category</label>
@@ -44,8 +47,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="btnUpdateProduct" class="btn btn-outline-primary">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 15px 50px;">Close</button>
+                    <button type="button" id="btnUpdateProduct" class="btn btn-outline-primary" style="border-radius: 15px 50px;">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Update Product
                     </button>

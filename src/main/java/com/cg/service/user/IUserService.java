@@ -8,9 +8,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.jws.soap.SOAPBinding;
+import java.util.List;
 import java.util.Optional;
 
 public interface IUserService extends IGeneralService<User>, UserDetailsService {
+
+    List<UserDTO> findAllUserDTO();
 
     User getByUsername(String username);
 
@@ -18,5 +21,15 @@ public interface IUserService extends IGeneralService<User>, UserDetailsService 
 
     Optional<UserDTO> findUserDTOByUsername(String username);
 
+
+    Boolean existsById(Long id);
+
+    Boolean existsByEmail(String email);
+
+    Boolean existsByEmailAndIdIsNot(String email, Long id);
+
+    User getByEmail(String email);
+
+    Optional<User> findByEmail(String email);
 
 }

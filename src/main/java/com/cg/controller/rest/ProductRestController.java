@@ -1,8 +1,10 @@
 package com.cg.controller.rest;
 
 
+import com.cg.exception.DataInputException;
 import com.cg.exception.ResourceNotFoundException;
 import com.cg.model.Category;
+//import com.cg.model.Customer;
 import com.cg.model.Product;
 import com.cg.model.dto.CategoryDTO;
 import com.cg.model.dto.ProductDTO;
@@ -37,7 +39,7 @@ public class ProductRestController {
     @GetMapping
     public ResponseEntity<?> getAllProducts() {
 
-        Iterable<ProductDTO> productDTOS = productService.findAllProductDTO();
+        List<ProductDTO> productDTOS = productService.findAllProductDTO();
 
 
         return new ResponseEntity<>(productDTOS, HttpStatus.OK);
@@ -45,11 +47,11 @@ public class ProductRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable Long id){
-        Optional<Product> productOptional = productService.findById(id);
-        if (productOptional.isPresent()){
-            throw new ResourceNotFoundException("Id không hợp lệ");
+        Optional<ProductDTO> productOptional = productService.findProductDTOById(id);
+        if(!productOptional.isPresent()){
+            throw  new ResourceNotFoundException("Id sách không hợp lệ");
         }
-        return new ResponseEntity<>(productOptional.get().toProductDTO(),HttpStatus.OK);
+        return new ResponseEntity<>(productOptional.get(),HttpStatus.OK);
     }
 //    @GetMapping("/category")
 //    public ResponseEntity<?> getCategory() {
@@ -64,20 +66,66 @@ public class ProductRestController {
     @PostMapping("/create")
     public ResponseEntity<?> doCreate(@Validated @RequestBody ProductDTO productDTO, BindingResult bindingResult) {
 
+
         if (bindingResult.hasErrors()) {
             return appUtils.mapErrorToResponse(bindingResult);
         }
+        Optional<Category> category = categoryService.findById(productDTO.toProduct().getCategory().getId());
 
+        if (!category.isPresent()) {
+            throw new DataInputException(" Giá trị Category k hợp lệ");
+        }
 
         productDTO.setId(0L);
-//        productDTO.setAmountProduct(0);
-//        productDTO.setPriceProduct(new BigDecimal(0L));
+      try {
 
-//        productDTO.getCategory().setId(0L);
+          Product newProduct = productService.save(productDTO.toProduct());
+          return new ResponseEntity<>(newProduct.toProductDTO(), HttpStatus.CREATED);
+      } catch (Exception e){
+          throw new DataInputException(" không thể thêm mới  server không thể xử lý");
 
-        Product newProduct = productService.save(productDTO.toProduct());
-
-        return new ResponseEntity<>(newProduct.toProductDTO(), HttpStatus.CREATED);
+      }
     }
+    @PutMapping("/update/{id}")
+     public ResponseEntity<?> doUpdate(@Validated @RequestBody ProductDTO productDTO, BindingResult bindingResult){
+
+        if (bindingResult.hasFieldErrors()){
+            return appUtils.mapErrorToResponse(bindingResult);
+        }
+            Boolean exitsById =productService.exitsByIdProduct(productDTO.getId());
+
+        if (!exitsById){
+            throw new ResourceNotFoundException("Id sản phẩm không tồn tại");
+        }
+        Optional<Category> category = categoryService.findById(productDTO.toProduct().getCategory().getId());
+
+        if (!category.isPresent()) {
+            throw new DataInputException(" Giá trị Category k hợp lệ");
+        }
+        productDTO.setId(productDTO.getId());
+
+
+       try{
+
+           Product productUpdate = productService.save(productDTO.toProduct());
+           return new ResponseEntity<>(productUpdate.toProductDTO(), HttpStatus.OK);
+       }catch (Exception ex){
+           throw new DataInputException(" không thể cập nhật server không thể xử lý");
+       }
+    }
+
+     @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> doDelete(@PathVariable Long id){
+
+         Optional<Product> optionalProduct = productService.findById(id);
+
+         if (optionalProduct.isPresent()) {
+             productService.deleteProductSoft(optionalProduct.get());
+             return new ResponseEntity<>("Xoá sản phẩm thành công", HttpStatus.OK);
+         } else {
+             return new ResponseEntity<>("Xoá sản phẩm thất bại", HttpStatus.BAD_REQUEST);
+
+         }
+     }
 
 }

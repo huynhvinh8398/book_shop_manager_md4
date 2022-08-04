@@ -1,12 +1,13 @@
 package com.cg.model.dto;
 
+import com.cg.model.LocationRegion;
 import com.cg.model.User;
 import lombok.*;
 import lombok.experimental.Accessors;
+
+import javax.persistence.Column;
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 
 @Getter
@@ -18,16 +19,27 @@ public class UserDTO {
 
     private Long id;
 
-    @NotBlank(message = "Email là bắt buộc")
-    @Email(message = "Trường Email không hợp lệ")
-    @Size(min = 10, message = "Email Tối thiểu là 10 đến 20 kí tự")
-    @Size(max = 20, message = "Email Tối thiểu là 10 đến 20 kí tự")
+
     private String username;
 
-    @NotBlank(message = "Password là bắt buộc")
-    @Size(min = 8, message = "Password tối thiểu 8 đến 20 kí tự")
-    @Size(max = 20, message = "Password tối thiểu 8 đến 20 kí tự")
+
     private String password;
+
+
+    private String fullName;
+
+
+    @NotEmpty(message = "Phone không được để trống")
+    private String phone;
+
+    @Column(name = "url_image")
+    private String urlImage;
+
+    @NotBlank(message = "email là bắt buộc")
+    private String email;
+
+    @Valid
+    private LocationRegionDTO locationRegion;
 
     @Valid
     private RoleDTO role;
@@ -38,12 +50,44 @@ public class UserDTO {
         this.username = username;
     }
 
+    public User toUserr(){
+        return new User()
+                .setId(id)
+                .setUrlImage(urlImage)
+                .setFullName(fullName)
+                .setUsername(username)
+                .setPassword(password)
+                .setPhone(phone)
+                .setRole(role.toRole())
+                .setLocationRegion(locationRegion.toLocationRegion());
+
+    }
+
+    public UserDTO(Long id, String fullName, String username, String password, String phone, LocationRegion locationRegion) {
+        this.id = id;
+        this.fullName = fullName;
+        this.username = username;
+        this.password = password;
+        this.phone = phone;
+        this.locationRegion = locationRegion.toLocationRegionDTO();
+    }
+
     public User toUser() {
         return new User()
                 .setId(id)
                 .setUsername(username)
                 .setPassword(password)
                 .setRole(role.toRole());
+    }
+
+    public UserDTO(Long id,String urlImage, String fullName, String username, String password, String phone, LocationRegion locationRegion) {
+        this.id = id;
+        this.urlImage = urlImage;
+        this.fullName = fullName;
+        this.username = username;
+        this.password = password;
+        this.phone = phone;
+        this.locationRegion = locationRegion.toLocationRegionDTO();
     }
 
 }

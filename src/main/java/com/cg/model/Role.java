@@ -1,5 +1,6 @@
 package com.cg.model;
 
+import com.cg.model.dto.RoleDTO;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -26,4 +27,11 @@ public class Role {
     @OneToMany(targetEntity = User.class, mappedBy = "role", fetch = FetchType.EAGER)
     private Set<User> users;
 
+
+    public RoleDTO toRoleDTO(){
+        return new RoleDTO()
+                .setId(id)
+                .setCode(code);
+
+    }
 }

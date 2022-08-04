@@ -30,7 +30,7 @@
 
             <div class="pagetitle">
 
-                    <button  id="addProduct" class="btn btn-outline-primary btn-add create-modal"
+                    <button  id="addProduct" class="btn btn-outline-primary btn-add shadow create-modal"
                             style="margin-left: 15px">
                         <i class="fa fa-plus"></i> Add new Product
                     </button>
@@ -46,9 +46,9 @@
                             <div class="responsive-table-plugin">
                                 <div class="table-rep-plugin">
                                     <div class="table-responsive" data-pattern="priority-columns">
-                                        <table id="tbListProducts" class="table  table-hover tbCustomer">
+                                        <table id="tbListProducts" class="table  table-hover table-bordered tbCustomer">
                                             <thead>
-                                            <tr style="background-color: #9ce9">
+                                            <tr style="background-color: #0d6efd">
                                                 <th class="text-center ">Id</th>
                                                 <th class="text-center " >Product Name</th>
                                                 <th class="text-center ">Image</th>
@@ -84,6 +84,9 @@
 <th:block th:replace="/layout/script :: script" />
 
 <!--<script type="text/javascript" src="/assets/js/jquery-3.6.0.min.js"></script>-->
+<div class="footer">
+
+</div>
 
 
 <!--end script-->
@@ -91,239 +94,318 @@
 
 <th:block th:replace="/product/modal_update :: modal_update" />
 
+<th:block th:replace="/product/footer :: footerr" />
 
 <script>
 
+            let category = new Category();
+            let product = new Product();
+            let productId = null;
 
-
-    let category = new Category();
-    let product = new Product();
-
-    function loadAllProduct(){
-        $.ajax({
-            "headers": {
-                "accept": "application/json",
-                "content-type": "application/json"
-            },
-            "type": "GET",
-            "url": "http://localhost:8080/api/products"
-
-        })
-        .done((data)=>{
-
-            $.each(data, (i,item) =>{
-                product = item;
-
-           let str = `
-            <tr>
-              <td class="text-center ">${product.id}</td>
-              <td class="text-center ">${product.productName}</td>
-              <td class="text-center "><img width="60px" style="border-radius: 10px;" src="${product.image}"></td>
-              <td class="text-center ">${product.amountProduct}</td>
-              <td class="text-center ">${product.priceProduct}</td>
-              <td class="text-center ">${product.category.name}</td>
-               <td class=" text-center "><button data-id="${product.id}" class="btn btn-success btn_edit"  id="btn_edit"><i class="fa-solid fa-pen-to-square"></i></button></td>
-               <td class=" text-center "><button data-id="${product.id}" class="btn btn-danger btn-delete"  id="btn-delete"><i class="fas fa-trash-alt"></i></button></td>
-            </tr>
-
-           ` ;
-
-                $("#tbListProducts tbody").append(str)
-
-                handleShowCreatProduct();
-                handleShowUpdateProduct();
-                // showCategory();
+            function loadAllProduct(){
+                $.ajax({
+                    "headers": {
+                        "accept": "application/json",
+                        "content-type": "application/json"
+                    },
+                    "type": "GET",
+                    "url": "http://localhost:8080/api/products"
                 })
-        }).fail(() => {
-            App.SweetAlert.showErrorAlert("Product Errors")
+                .done((data)=>{
+
+                    $.each(data, (i,item) =>{
+                        product = item;
+
+
+                        let str = `
+                            <tr id="tr_${product.id}">
+                                <td class="text-center ">${product.id}</td>
+                                <td class="text-center ">${product.productName}</td>
+                                <td class="text-center ">
+                                    <img width="60px" style="border-radius: 10px;" src="${product.image}">
+                                </td>
+                                <td class="text-center ">${product.amountProduct}</td>
+                                <td class="text-center ">${product.priceProduct}</td>
+                                <td class="text-center ">${product.category.name}</td>
+                                <td class=" text-center ">
+                                        <button data-id="${product.id}" class="btn btn-success btn_edit"  id="btn_edit" style="border-radius: 75px">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                 </td>
+                                 <td class=" text-center ">
+                                        <button data-id="${product.id}" class="btn btn-danger btn_delete"  id="btn-delete" style="border-radius: 75px">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                 </td>
+                            </tr>
+
+                       ` ;
+
+                        $("#tbListProducts tbody").append(str)
+                   });
+
+                    handleShowCreatProduct();
+                    handleShowUpdateProduct();
+                    handleshowConfirmDelete();
+                }).fail(() => {
+                    App.SweetAlert.showErrorAlert("Product Errors")
+                })
+            }
+
+
+            function getProductById(productId) {
+                return $.ajax({
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    "type": "GET",
+                    url: "http://localhost:8080/api/products/" + productId
+                })
+                    .done((data) => {
+                        console.log(data);
+                        product = data;
+                    })
+                    .fail((err) => {
+                        App.SweetAlert.showErrorAlert("fail id product");
+                        console.log(err);
+                    })
+            }
+
+                function handleShowCreatProduct(){
+              $('.create-modal').on('click', () => {
+                  $('#modalCreateProduct').modal('show');
+              })
+
+          }
+
+              function handleShowUpdateProduct(){
+                $('button.btn_edit').on('click', function () {
+
+                    let id = $(this).data("id");
+
+                    getProductById(id).then(function ()  {
+                        category = product.category;
+                        $("#nameUp").val(product.productName);
+                        $("#imageUp").val(product.image);
+                        $("#amountUp").val(product.amountProduct);
+                        $("#priceUp").val(product.priceProduct);
+                        $("#categoryUp").val(product.category.id);
+                        $('#modalUpdateProduct').modal('show')
+                    });
+                });
+              }
+              function handleshowConfirmDelete(){
+                $('button.btn_delete').on("click", function (){
+                    let id = $(this).data("id");
+                    getProductById(id).then(function ()  {
+
+                        App.SweetAlert.showConfirmDeleteProduct()
+                        .then((result) =>{
+                            if (result.isConfirmed) {
+                                    doDelete(id);
+                            }
+                        })
+                    })
+                }
+            )}
+
+
+
+            $("#modalCreateProduct").on("hidden.bs.modal", function () {
+                $("#frmCreateProduct")[0].reset();
+            });
+            function unbindAll() {
+                $("#tbListProducts tbody tr").off();
+                $("#btn_edit").off();
+                $("#btn_delete").off();
+
+            }
+
+              $("#btnCreateProduct").on("click", () =>{
+                  category.id = $("#categoryCrea").val();
+                  category.name = $("#categoryCrea  :selected").text();
+                  delete product.id;
+                  product.productName = $("#nameCre").val();
+                  product.image = $("#imageCrea").val();
+                  product.amountProduct = $("#amountCrea").val();
+                  product.priceProduct = $("#priceCrea").val();
+                  product.category = category;
+                  console.log(category)
+
+                  $.ajax({
+                     headers:{
+                         accept: "application/json",
+                         "content-type" : "application/json"
+                     },
+                      type : "POST",
+                      url:"http://localhost:8080/api/products/create",
+                      data: JSON.stringify(product)
+
+                  })
+                  .done((data) =>{
+                      product = data;
+                      category = product.category;
+                      $('#modalCreateProduct').modal('hide');
+
+                      let str = `
+                            <tr id="tr_${product.id}">
+                                  <td class="text-center align-middle">${product.id}</td>
+                                  <td class="text-center align-middle">${product.productName}</td>
+                                  <td class="text-center align-middle">
+                                  <img width="60px" style="border-radius: 10px;" src="${product.image}">
+                                  </td>
+                                  <td class="text-center align-middle">${product.amountProduct}</td>
+                                  <td class="text-center align-middle">${product.priceProduct}</td>
+                                  <td class="text-center align-middle">${product.category.name}</td>
+                                  <td class="align-middle text-center ">
+                                        <button data-id="${product.id}" class="btn btn-success btn_edit"  id="btn_edit" style="border-radius: 75px">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                  </td>
+                                  <td class="align-middle text-center ">
+                                         <button data-id="${product.id}" class="btn btn-danger btn_delete"  id="btn-delete" style="border-radius: 75px">
+                                             <i class="fas fa-trash-alt"></i>
+                                         </button>
+                                  </td>
+                            </tr>
+
+                   ` ;
+
+                      $("#tbListProducts tbody").append(str)
+
+                      App.IziToast.showSuccessAlert("Thêm sản phẩm thành công")
+                        unbindAll();
+                      handleShowCreatProduct();
+                      handleShowUpdateProduct();
+                      handleshowConfirmDelete();
+
+                  })
+                   .fail((jqXHR) =>{
+                       console.log(jqXHR);
+                       $('#modalCreateProduct .modal-alert-danger ').html("").removeClass('hide').addClass('show');
+                       if (jqXHR.responseJSON.message) {
+                           let msg = jqXHR.responseJSON.message;
+                           let str = `<label for="message" id="message-error" class="error">${msg}</label>`
+                           $('#modalCreateProduct .modal-alert-danger').append(str)
+                       } else if (jqXHR.responseJSON) {
+                           let str = '';
+                           $.each(jqXHR.responseJSON, (key, item) => {
+                               str += `<label for="${key}" id="${key}-error" class="error">${item}</label><br>`;
+                           })
+                           $('#modalCreateProduct .modal-alert-danger').append(str);
+                       }
+                       // App.IziToast.showErrorAlert("thêm sản phẩm thất bại")
+                   })
+
+              })
+
+              $('#btnUpdateProduct').on("click", () =>{
+                  category.id = $("#categoryUp").val();
+                  category.name = $("#categoryUp  :selected").text();
+                  product.productName = $("#nameUp").val();
+                  product.image = $("#imageUp").val();
+                  product.amountProduct = $("#amountUp").val();
+                  product.priceProduct = $("#priceUp").val();
+                  product.category = category;
+                 $.ajax({
+                headers:{
+                    accept: "application/json",
+                    "content-type" : "application/json"
+                },
+                type : "PUT",
+                url:"http://localhost:8080/api/products/update/" +product.id,
+                data: JSON.stringify(product)
+             })
+                .done((data) =>{
+                    product = data;
+                    category = product.category;
+                    console.log(data);
+                    let str = `
+                            <tr id="tr_${product.id}">
+                                  <td class="text-center align-middle">${product.id}</td>
+                                  <td class="text-center align-middle">${product.productName}</td>
+                                  <td class="text-center align-middle">
+                                  <img width="60px" style="border-radius: 10px;" src="${product.image}">
+                                  </td>
+                                  <td class="text-center align-middle">${product.amountProduct}</td>
+                                  <td class="text-center align-middle">${product.priceProduct}</td>
+                                  <td class="text-center align-middle">${product.category.name}</td>
+                                  <td class="align-middle text-center ">
+                                        <button data-id="${product.id}" class="btn btn-success btn_edit"  id="btn_edit"style="border-radius: 75px">
+                                             <i class="fa-solid fa-pen-to-square"></i>
+                                         </button>
+                                  </td>
+                                  <td class="align-middle text-center ">
+                                        <button data-id="${product.id}" class="btn btn-danger btn_delete"  id="btn-delete" style="border-radius: 75px">
+                                             <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                  </td>
+                            </tr>
+
+                   ` ;
+                    let currentRow =$('#tr_' +product.id);
+                            currentRow.replaceWith(str);
+                            $('#modalUpdateProduct').modal('hide');
+
+                    App.IziToast.showSuccessAlert("Cập nhật sản phẩm thành công")
+                    unbindAll();
+                    handleShowCreatProduct();
+                    handleShowUpdateProduct();
+                    handleshowConfirmDelete();
+
+                })
+                .fail((jqXHR) =>{
+                    $('#modalUpdateProduct .modal-alert-danger ').html('').removeClass('hide').addClass('show');
+                    if (jqXHR.responseJSON.message) {
+                        let msg = jqXHR.responseJSON.message;
+                        let str = `<label for="message" id="message-error" class="error">${msg}</label>`
+                        $('#modalUpdateProduct .modal-alert-danger').append(str)
+                    } else if (jqXHR.responseJSON) {
+                        let str = '';
+                        $.each(jqXHR.responseJSON, (key, item) => {
+                            str += `<label for="${key}" id="${key}-error" class="error">${item}</label><br>`;
+                        })
+                        $('#modalUpdateProduct .modal-alert-danger').append(str);
+                    }
+                    // App.IziToast.showErrorAlert("Cập nhật sản phẩm thất bại")
+                })
             })
-    }
-    function getProductById(productId) {
-        return $.ajax({
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            "type": "GET",
-            url: "http://localhost:8080/api/products/" + productId
-        }).done((data) => {
-            product = data;
-            console.log(product);
-        }).fail((jqXHR) => {
-            App.SweetAlert.showErrorAlert("fail id product");
-            console.log(jqXHR);
-        })
-    }
+
+            function doDelete(id) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: "http://localhost:8080/api/products/delete/" + id,
+                        data: JSON.stringify(product)
+
+                    })
+                        .done(() => {
+                          $('#tr_' + id).remove();
+
+                            App.SweetAlert.showSuccessAlert("Xoá sản phẩm thành công")
+                        })
+                        .fail(() =>{
+                            App.SweetAlert.showErrorAlert("sản phẩm không có")
+                        })
 
 
-      function handleShowCreatProduct(){
-          $('.create-modal').on('click', () => {
-              $('#modalCreateProduct').modal('show');
-          })
-      }
-      function handleShowUpdateProduct(){
-        $('.btn_edit').on('click', () =>{
-            $('#modalUpdateProduct').modal('show')
-        })
-      }
+            }
 
+            function handleCloseModalCreate() {
+                $("#modalCreateProduct").on("hidden.bs.modal", () => {
+                    $('#modalCreateProduct .modal-alert-danger').empty().removeClass('show').addClass('hide');
+                })
+            }
+            function handleCloseModalUpdate() {
+                $("#modalUpdateProduct").on("hidden.bs.modal", () => {
+                    $('#modalUpdateProduct .modal-alert-danger').empty().removeClass('show').addClass('hide');
+                })
+            }
 
-      $("#btnCreateProduct").on("click", () =>{
-          category.id = $("#categoryCrea").val();
-          category.name = $("#categoryCrea  :selected").text();
+            loadAllProduct();
 
-          // category.code = " b "
-          delete product.id;
-          product.productName = $("#nameCre").val();
-          product.image = $("#imageCrea").val();
-          product.amountProduct = $("#amountCrea").val();
-          product.priceProduct = $("#priceCrea").val();
-          product.category = category;
-          console.log(category)
-
-          $.ajax({
-             headers:{
-                 accept: "application/json",
-                 "content-type" : "application/json"
-             },
-              type : "POST",
-              url:"http://localhost:8080/api/products/create",
-              data: JSON.stringify(product)
-
-          })
-          .done((data) =>{
-              product = data;
-              category = product.category;
-              $('#modalCreateProduct').modal('hide');
-
-              let str = `
-            <tr>
-              <td class="text-center align-middle">${product.id}</td>
-              <td class="text-center align-middle">${product.productName}</td>
-              <td class="text-center align-middle"><img width="60px" style="border-radius: 10px;" src="${product.image}"></td>
-              <td class="text-center align-middle">${product.amountProduct}</td>
-              <td class="text-center align-middle">${product.priceProduct}</td>
-              <td class="text-center align-middle">${product.category.name}</td>
-               <td class="align-middle text-center "><button data-id="${product.id}" class="btn btn-success btn_edit"  id="btn_edit"><i class="fa-solid fa-pen-to-square"></i></button></td>
-               <td class="align-middle text-center "><button data-id="${product.id}" class="btn btn-danger btn-delete"  id="btn-delete"><i class="fas fa-trash-alt"></i></button></td>
-            </tr>
-
-           ` ;
-
-              $("#tbListProducts tbody").append(str)
-
-              App.IziToast.showSuccessAlert("Thêm sản phẩm thành công")
-
-              handleShowCreatProduct();
-          })
-           .fail(() =>{
-               // $('#modalCreateProduct .alert-danger ').html('').removeClass('hide').addClass('show');
-               // if (jqXHR.responseJSON.message) {
-               //     let msg = jqXHR.responseJSON.message;
-               //     let str = `<label for="message" id="message-error" class="error">${msg}</label>`
-               //     $('#modalCreateProduct .alert-danger').append(str)
-               // } else if (jqXHR.responseJSON) {
-               //     let str = '';
-               //     $.each(jqXHR.responseJSON, (key, item) => {
-               //         str += `<label for="${key}" id="${key}-error" class="error">${item}</label><br>`;
-               //         $('#modalCreateProduct .alert-danger').append(str);
-               //     })
-               // }
-               App.IziToast.showErrorAlert("thêm sản phẩm thất bại")
-           })
-
-      })
-      $('#btnUpdateProduct').on("click", () =>{
-          category.id = $("#categoryUp").val();
-          category.name = $("#categoryUp  :selected").text();
-
-          // category.code = " b "
-          delete product.id;
-          product.productName = $("#nameUp").val();
-          product.image = $("#imageUp").val();
-          product.amountProduct = $("#amountUp").val();
-          product.priceProduct = $("#priceUp").val();
-          product.category = category;
-      })
-    $.ajax({
-        headers:{
-            accept: "application/json",
-            "content-type" : "application/json"
-        },
-        type : "POST",
-        url:"http://localhost:8080/api/products/update",
-        data: JSON.stringify(product)
-
-    })
-        .done((data) =>{
-            product = data;
-            category = product.category;
-            $('#modalUpdateProduct').modal('hide');
-
-            let str = `
-            <tr>
-              <td class="text-center align-middle">${product.id}</td>
-              <td class="text-center align-middle">${product.productName}</td>
-              <td class="text-center align-middle"><img width="60px" style="border-radius: 10px;" src="${product.image}"></td>
-              <td class="text-center align-middle">${product.amountProduct}</td>
-              <td class="text-center align-middle">${product.priceProduct}</td>
-              <td class="text-center align-middle">${product.category.name}</td>
-               <td class="align-middle text-center "><button data-id="${product.id}" class="btn btn-success btn_edit"  id="btn_edit"><i class="fa-solid fa-pen-to-square"></i></button></td>
-               <td class="align-middle text-center "><button data-id="${product.id}" class="btn btn-danger btn-delete"  id="btn-delete"><i class="fas fa-trash-alt"></i></button></td>
-            </tr>
-
-           ` ;
-
-            $("#tbListProducts tbody").append(str)
-
-            App.IziToast.showSuccessAlert("Cập nhật sản phẩm thành công")
-
-            handleShowCreatProduct();
-            handleShowUpdateProduct();
-        })
-        .fail(() =>{
-            // $('#modalCreateProduct .alert-danger ').html('').removeClass('hide').addClass('show');
-            // if (jqXHR.responseJSON.message) {
-            //     let msg = jqXHR.responseJSON.message;
-            //     let str = `<label for="message" id="message-error" class="error">${msg}</label>`
-            //     $('#modalCreateProduct .alert-danger').append(str)
-            // } else if (jqXHR.responseJSON) {
-            //     let str = '';
-            //     $.each(jqXHR.responseJSON, (key, item) => {
-            //         str += `<label for="${key}" id="${key}-error" class="error">${item}</label><br>`;
-            //         $('#modalCreateProduct .alert-danger').append(str);
-            //     })
-            // }
-            App.IziToast.showErrorAlert("Cập nhật sản phẩm thất bại")
-        })
-
-
-
-
-    // function showCategory(id) {
-    //
-    //     $.ajax({
-    //         type: "GET",
-    //         url: "http://localhost:8080/api/products/category" +id
-    //     }).done((data) => {
-    //         console.log(data);
-    //
-    //         $.each(data, (i, item) => {
-    //             let str = `<option value="${item.id}" >${item.name}</option>`;
-    //             $("#categoryCrea").prepend(str);
-    //
-    //         })
-    //     })
-
-
-    // }
-
-    // function handleShowDelete
-
-
-    loadAllProduct();
-
-
+            handleCloseModalCreate();
+            handleCloseModalUpdate();
 </script>
 </body>
 </html>

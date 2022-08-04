@@ -41,6 +41,7 @@ public class ProductServiceImpl implements IProductService {
 //        Category category ;
 //        category = categoryRepository.save(product.getCategory());
 //        product.setCategory(category);
+
         return productRepository.save(product);
 
 
@@ -63,17 +64,26 @@ public class ProductServiceImpl implements IProductService {
         return productRepository.findProductDTOById(id);
     }
 
-//    @Override
-//    public ProductDTO doCreate(ProductDTO productDTO) {
-//        Product product = productRepository.save(productDTO.toProduct());
-//
-//        ProductDTO newProductDTO = product.toProductDTO();
-//
-//        return newProductDTO;
-//    }
+    @Override
+    public Boolean exitsByIdProduct(Long id) {
+        return productRepository.existsById(id);
+    }
+
+
 
     @Override
     public void deleteProductById(Long id) {
           productRepository.deleteProductById(id);
+    }
+
+    @Override
+    public void deleteProductSoft(Product product) {
+        product.setDeleted(true);
+        productRepository.save(product);
+    }
+
+    @Override
+    public Boolean existsByNameProduct(String name) {
+        return existsByNameProduct(name);
     }
 }

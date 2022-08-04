@@ -9,12 +9,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.config.annotation.authentication.configurers.userdetails.DaoAuthenticationConfigurer;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -27,32 +30,33 @@ public class ProductDTO  {
 
     private Long id;
 
-
+    @NotEmpty(message = "Tên sách không được để trống")
+    @Size(min = 5,max = 30, message = "Tên sách từ 5 đến 30 kí tự")
     private String productName;
 
-    private CategoryDTO category;
+    @Valid
+     private CategoryDTO category;
 
-    private int amountProduct;
+    @NotEmpty(message = "Số lượng sách không được để trống")
+    @Pattern(regexp = "^[1-9]+$", message = "số lượng chỉ nhập số và lớn 0")
+    private String amountProduct;
 
-    private BigDecimal priceProduct;
+    @NotEmpty(message = "Giá sách không được để trống")
+    @Pattern(regexp = "^[1-9]+$", message = "Giá chỉ nhập số và lớn hơn 0")
+    @Length(max = 6,message = "giá tiền vượt quá giá hạn 999999")
+    private String priceProduct;
 
+    @Size(max = 10000, message = "Đường dẫn ảnh quá dài vượt quá 10000 kí tự!")
+    @NotBlank(message = "Đường dẫn ảnh không được để trống")
     private String image;
-//    @JsonFormat(pattern = "HH:mm - dd/MM/yyyy", timezone = "Aisa/Ho Chi Minh")
-//
-//    private Date createdAt;
-//    @JsonFormat(pattern = "HH:mm - dd/MM/yyyy", timezone = "Aisa/Ho Chi Minh")
-//
-//    private Date updatedAt;
 
     public ProductDTO(Long id,  String productName, Category category, int amountProduct, BigDecimal priceProduct, String image) {
         this.id = id;
         this.productName = productName;
         this.category = category.toCategoryDTO();
-        this.amountProduct = amountProduct;
-        this.priceProduct =priceProduct;
+        this.amountProduct = String.valueOf(amountProduct);
+        this.priceProduct =String.valueOf(priceProduct);
         this.image = image;
-//        this.createdAt = createdAt;
-//        this.updatedAt = updatedAt;
     }
 
     public Product toProduct(){
@@ -60,8 +64,8 @@ public class ProductDTO  {
                 .setId(id)
                 .setProductName(productName)
                 .setCategory(category.toCategory())
-                .setAmountProduct(amountProduct)
-                .setPriceProduct(priceProduct)
+                .setAmountProduct(Integer.parseInt(amountProduct))
+                .setPriceProduct(new BigDecimal(priceProduct))
                 .setImage(image)
                 ;
     }

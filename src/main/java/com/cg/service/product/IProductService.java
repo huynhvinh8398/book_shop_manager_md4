@@ -1,7 +1,7 @@
 package com.cg.service.product;
 
 import com.cg.model.Product;
-import com.cg.model.dto.CustomerDTO;
+//import com.cg.model.dto.CustomerDTO;
 import com.cg.model.dto.ProductDTO;
 import com.cg.service.IGeneralService;
 
@@ -12,8 +12,14 @@ public interface IProductService extends IGeneralService<Product> {
     List<ProductDTO> findAllProductDTO();
 
     Optional<ProductDTO> findProductDTOById(Long id);
-//    ProductDTO doCreate(ProductDTO productDTO);
+
+    Boolean exitsByIdProduct(Long id);
 
     void deleteProductById(Long id);
+
+    void deleteProductSoft(Product product);
+    Boolean existsByNameProduct(String name);
+
+
 
 }
