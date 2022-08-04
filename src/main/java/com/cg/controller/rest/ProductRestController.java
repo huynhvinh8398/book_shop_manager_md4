@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -87,7 +88,7 @@ public class ProductRestController {
       }
     }
     @PutMapping("/update/{id}")
-     public ResponseEntity<?> doUpdate(@Validated @RequestBody ProductDTO productDTO, BindingResult bindingResult){
+     public ResponseEntity<?> doUpdate(@Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult){
 
         if (bindingResult.hasFieldErrors()){
             return appUtils.mapErrorToResponse(bindingResult);

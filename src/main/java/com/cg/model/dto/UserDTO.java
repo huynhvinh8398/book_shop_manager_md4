@@ -29,14 +29,12 @@ public class UserDTO {
     private String fullName;
 
 
-    @NotEmpty(message = "Phone không được để trống")
+//    @NotEmpty(message = "Phone không được để trống")
     private String phone;
 
     @Column(name = "url_image")
     private String urlImage;
 
-    @NotBlank(message = "email là bắt buộc")
-    private String email;
 
     @Valid
     private LocationRegionDTO locationRegion;

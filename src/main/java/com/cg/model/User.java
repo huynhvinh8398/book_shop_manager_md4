@@ -30,7 +30,6 @@ public class User extends BaseEntity {
 
     private String urlImage;
 
-    private String email;
 
 
     @OneToOne

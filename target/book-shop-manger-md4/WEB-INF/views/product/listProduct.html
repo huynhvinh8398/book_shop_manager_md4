@@ -125,7 +125,10 @@
                                     <img width="60px" style="border-radius: 10px;" src="${product.image}">
                                 </td>
                                 <td class="text-center ">${product.amountProduct}</td>
-                                <td class="text-center ">${product.priceProduct}</td>
+                                <td class="text-center ">${new Intl.NumberFormat('vi-VN', {
+                                        style: 'currency',
+                                        currency: 'VND'
+                                    }).format(product.priceProduct)}</td></td>
                                 <td class="text-center ">${product.category.name}</td>
                                 <td class=" text-center ">
                                         <button data-id="${product.id}" class="btn btn-success btn_edit"  id="btn_edit" style="border-radius: 75px">
@@ -189,7 +192,9 @@
                         $("#nameUp").val(product.productName);
                         $("#imageUp").val(product.image);
                         $("#amountUp").val(product.amountProduct);
-                        $("#priceUp").val(product.priceProduct);
+                        let productPrice = product.priceProduct
+                         productPrice.replace(".00", "");
+                        $("#priceUp").val(productPrice);
                         $("#categoryUp").val(product.category.id);
                         $('#modalUpdateProduct').modal('show')
                     });
@@ -256,7 +261,10 @@
                                   <img width="60px" style="border-radius: 10px;" src="${product.image}">
                                   </td>
                                   <td class="text-center align-middle">${product.amountProduct}</td>
-                                  <td class="text-center align-middle">${product.priceProduct}</td>
+                                  <td class="text-center align-middle">${new Intl.NumberFormat('vi-VN', {
+                                  style: 'currency',
+                                  currency: 'VND'
+                              }).format(product.priceProduct)}</td>
                                   <td class="text-center align-middle">${product.category.name}</td>
                                   <td class="align-middle text-center ">
                                         <button data-id="${product.id}" class="btn btn-success btn_edit"  id="btn_edit" style="border-radius: 75px">
@@ -329,7 +337,10 @@
                                   <img width="60px" style="border-radius: 10px;" src="${product.image}">
                                   </td>
                                   <td class="text-center align-middle">${product.amountProduct}</td>
-                                  <td class="text-center align-middle">${product.priceProduct}</td>
+                                  <td class="text-center align-middle">${new Intl.NumberFormat('vi-VN', {
+                                        style: 'currency',
+                                        currency: 'VND'
+                                    }).format(product.priceProduct)}</td>
                                   <td class="text-center align-middle">${product.category.name}</td>
                                   <td class="align-middle text-center ">
                                         <button data-id="${product.id}" class="btn btn-success btn_edit"  id="btn_edit"style="border-radius: 75px">
@@ -357,11 +368,8 @@
                 })
                 .fail((jqXHR) =>{
                     $('#modalUpdateProduct .modal-alert-danger ').html('').removeClass('hide').addClass('show');
-                    if (jqXHR.responseJSON.message) {
-                        let msg = jqXHR.responseJSON.message;
-                        let str = `<label for="message" id="message-error" class="error">${msg}</label>`
-                        $('#modalUpdateProduct .modal-alert-danger').append(str)
-                    } else if (jqXHR.responseJSON) {
+
+                     if (jqXHR.responseJSON) {
                         let str = '';
                         $.each(jqXHR.responseJSON, (key, item) => {
                             str += `<label for="${key}" id="${key}-error" class="error">${item}</label><br>`;

@@ -5,6 +5,7 @@ import com.cg.exception.EmailExistsException;
 import com.cg.model.JwtResponse;
 import com.cg.model.Role;
 import com.cg.model.User;
+import com.cg.model.dto.RoleDTO;
 import com.cg.model.dto.UserDTO;
 import com.cg.service.jwt.JwtService;
 import com.cg.service.role.IRoleService;
@@ -52,15 +53,22 @@ public class AuthRestController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors())
-            return appUtil.mapErrorToResponse(bindingResult);
 
+
+        if (bindingResult.hasErrors()) {
+            return appUtil.mapErrorToResponse(bindingResult);
+        }
+        RoleDTO roleDTO =new RoleDTO();
+        userDTO.setId(1L);
+        userDTO.setPhone("123");
+        userDTO.setFullName("vinh123");
+        userDTO.setUrlImage("user.png");
+        userDTO.setRole(new RoleDTO());
         Optional<UserDTO> optUser = userService.findUserDTOByUsername(userDTO.getUsername());
 
         if (optUser.isPresent()) {
             throw new EmailExistsException("Email already exists");
         }
-
         Optional<Role> optRole = roleService.findById(userDTO.getRole().getId());
 
         if (!optRole.isPresent()) {

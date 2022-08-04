@@ -79,13 +79,12 @@ class LocationRegion {
 }
 
 class User{
-    constructor(id,username, password, fullName, phone, email,locationRegion, urlImage,role) {
+    constructor(id,username, password, fullName, phone, locationRegion, urlImage,role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.fullName = fullName;
         this.phone = phone;
-        this.email = email;
         this.locationRegion = locationRegion;
         this.urlImage = urlImage;
         this.role = role;

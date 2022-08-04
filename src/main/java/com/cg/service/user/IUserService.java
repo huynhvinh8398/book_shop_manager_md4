@@ -24,12 +24,10 @@ public interface IUserService extends IGeneralService<User>, UserDetailsService 
 
     Boolean existsById(Long id);
 
-    Boolean existsByEmail(String email);
+    Boolean existsByUserName(String username);
 
-    Boolean existsByEmailAndIdIsNot(String email, Long id);
+    Boolean existsByUserAndIdIsNot(String username, Long id);
 
-    User getByEmail(String email);
 
-    Optional<User> findByEmail(String email);
 
 }

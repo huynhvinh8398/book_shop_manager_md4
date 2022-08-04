@@ -256,12 +256,12 @@
             locationRegion.wardName = $('#ward :selected').text()
             locationRegion.address = $('#address').val()
 
-            user.id =userId;
+            delete user.id;
             role.id = $('#role').val();
             user.fullName = $('#fullName').val();
             user.username = $('#userName').val();
             user.password = $("#password").val();
-            user.email = $('#email').val();
+            // user.email = $('#email').val();
             user.phone = $('#phone').val();
             user.urlImage = 'user.png';
             user.role = role;

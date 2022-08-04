@@ -50,10 +50,10 @@ public class UserRestController {
             return appUtil.mapErrorToResponse(bindingResult);
         }
 
-        userDTO.setId(1L);
+        userDTO.setId(0L);
         userDTO.getLocationRegion().setId(0L);
 
-        Boolean exitsEmail = userService.existsByEmail(userDTO.getEmail());
+        Boolean exitsEmail = userService.existsByUserName(userDTO.getUsername());
 
         if (exitsEmail){
             throw new EmailExistsException("Email already exits");
