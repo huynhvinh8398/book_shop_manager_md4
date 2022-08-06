@@ -31,7 +31,8 @@ public class Role {
     public RoleDTO toRoleDTO(){
         return new RoleDTO()
                 .setId(id)
-                .setCode(code);
+                .setCode(code)
+                .setName(name);
 
     }
 }

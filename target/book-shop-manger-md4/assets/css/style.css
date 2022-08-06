@@ -1,5 +1,29 @@
 
 
+table td span.select-tab {
+  border-left-width: 7px;
+  border-left-style: solid;
+  min-width: 0;
+  display: block;
+  height: 24px;
+  margin: 0 0 0 -4px;
+  padding: 0;
+}
+/*.table > tbody > tr > td {*/
+/*  vertical-align: middle;*/
+/*}*/
+/*table tbody td {*/
+/*  border: 0 solid #ddd;*/
+/*}*/
+
+table td span.selected {
+  border-left-color: #f802a6 !important;
+}
+
+table td span.unselected {
+  border-left-color: #dfdfdf;
+}
+
 
 td {
   vertical-align: middle !important;

@@ -15,19 +15,19 @@
 <body>
 
 <div class="container" id="container">
-    <div class="form-container sign-up-container">
-        <form action="#" class="form" id="formSignUp">
-            <h1>Create Account</h1>
-            <select name="role" id="role" class="form-select" placeholder="Role" >
-                <option value="1">ADMIN</option>
-                <option value="2">USER</option>
-            </select>
-            <input type="text" id="usernameReg" name="usernameReg" placeholder="Username" />
-            <input type="password" id="passwordReg" name="passwordReg" placeholder="Password" />
-            <input type="password" id="rePasswordReg" placeholder="Confirm Password" />
-            <button id="btn_sign_up" class="btn">SIGN UP</button>
-        </form>
-    </div>
+<!--    <div class="form-container sign-up-container">-->
+<!--        <form action="#" class="form" id="formSignUp">-->
+<!--            <h1>Create Account</h1>-->
+<!--            <select name="role" id="role" class="form-select" placeholder="Role" >-->
+<!--                <option value="1">ADMIN</option>-->
+<!--                <option value="2">USER</option>-->
+<!--            </select>-->
+<!--            <input type="text" id="usernameReg" name="usernameReg" placeholder="Username" />-->
+<!--            <input type="password" id="passwordReg" name="passwordReg" placeholder="Password" />-->
+<!--            <input type="password" id="rePasswordReg" placeholder="Confirm Password" />-->
+<!--            <button id="btn_sign_up" class="btn">SIGN UP</button>-->
+<!--        </form>-->
+<!--    </div>-->
     <div class="form-container sign-in-container">
         <form action="#" class="form" id="formLogin">
             <h1>Log In</h1>
@@ -47,7 +47,7 @@
             <div class="overlay-panel overlay-right">
                 <h1>Hello, Friend!</h1>
                 <p>Enter your personal details and start journey with us</p>
-                <button class="btn" id="signUp">Sign Up</button>
+<!--                <button class="btn" id="signUp">Sign Up</button>-->
             </div>
         </div>
     </div>
@@ -97,49 +97,49 @@
 
     //đăng ký //
 
-    let btnRegister = $("#btn_sign_up");
-
-    btnRegister.on("click", () => {
-
-        let username = $("#usernameReg").val();
-        let password = $("#passwordReg").val();
-        let passwordcp = $("#rePasswordReg").val();
-        let roleId = $("#role").val();
-
-        let user = {
-            username: username,
-            password: password,
-            role: {
-                id: roleId
-            }
-        }
-        if(password !== passwordcp){
-            App.IziToast.showErrorAlert("Tạo Thất Bại Vui Lòng Nhập đúng Password trên và dưới!")
-            return;
-        }
-
-        $.ajax({
-            "headers": {
-                "accept": "application/json",
-                "content-type": "application/json"
-            },
-            "type": "POST",
-            "url": "http://localhost:8080/api/auth/register",
-            "data": JSON.stringify(user)
-        })
-        .done((data) => {
-            console.log(user)
-            $("#usernameLogin").val(username);
-            $("#passwordLogin").val(password);
-            App.IziToast.showSuccessAlert("đăng kí thành công")
-            setTimeout(() => {
-                $(".btn-signIn").click();
-            }, 2000);
-        })
-        .fail((jqXHR) => {
-           App.IziToast.showErrorAlert("đăng kí thất bại")
-        })
-    });
+    // let btnRegister = $("#btn_sign_up");
+    //
+    // btnRegister.on("click", () => {
+    //
+    //     let username = $("#usernameReg").val();
+    //     let password = $("#passwordReg").val();
+    //     let passwordcp = $("#rePasswordReg").val();
+    //     let roleId = $("#role").val();
+    //
+    //     let user = {
+    //         username: username,
+    //         password: password,
+    //         role: {
+    //             id: roleId
+    //         }
+    //     }
+    //     if(password !== passwordcp){
+    //         App.IziToast.showErrorAlert("Tạo Thất Bại Vui Lòng Nhập đúng Password trên và dưới!")
+    //         return;
+    //     }
+    //
+    //     $.ajax({
+    //         "headers": {
+    //             "accept": "application/json",
+    //             "content-type": "application/json"
+    //         },
+    //         "type": "POST",
+    //         "url": "http://localhost:8080/api/auth/register",
+    //         "data": JSON.stringify(user)
+    //     })
+    //     .done((data) => {
+    //         console.log(user)
+    //         $("#usernameLogin").val(username);
+    //         $("#passwordLogin").val(password);
+    //         App.IziToast.showSuccessAlert("đăng kí thành công")
+    //         setTimeout(() => {
+    //             $(".btn-signIn").click();
+    //         }, 2000);
+    //     })
+    //     .fail((jqXHR) => {
+    //        App.IziToast.showErrorAlert("đăng kí thất bại")
+    //     })
+    // });
 
 </script>
 

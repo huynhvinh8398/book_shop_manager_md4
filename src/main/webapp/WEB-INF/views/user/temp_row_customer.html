@@ -2,9 +2,9 @@
 
 <th:block th:fragment="temp_row_customer">
 
-    <textarea id="tempRowCustomer" class="hide">
+    <textarea id="tempRowCustomer" class="hide" style="display: none">
         <tr id="tr_{0}">
-            <td></td>
+            <td><span  class="select-tab unselected"></span></td>
             <td>{1}</td>
             <td><img src="/assets/img/{2}" alt="" width="50" height="50"></td>
             <td>{3}</td>
@@ -14,6 +14,7 @@
             <td>{7}</td>
             <td>{8}</td>
             <td>{9}</td>
+            <td>{10}</td>
         </tr>
     </textarea>
 

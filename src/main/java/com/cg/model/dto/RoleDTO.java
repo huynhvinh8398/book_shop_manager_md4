@@ -20,11 +20,13 @@ public class RoleDTO {
     private Long id;
 
     private String code;
+    private String name;
 
     public Role toRole() {
         return new Role()
                 .setId(id)
-                .setCode(code);
+                .setCode(code)
+                .setName(name);
     }
 
 }

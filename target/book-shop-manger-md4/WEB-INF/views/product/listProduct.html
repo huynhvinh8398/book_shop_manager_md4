@@ -144,7 +144,7 @@
 
                        ` ;
 
-                        $("#tbListProducts tbody").append(str)
+                        $("#tbListProducts tbody").prepend(str)
                    });
 
                     handleShowCreatProduct();
@@ -262,9 +262,9 @@
                                   </td>
                                   <td class="text-center align-middle">${product.amountProduct}</td>
                                   <td class="text-center align-middle">${new Intl.NumberFormat('vi-VN', {
-                                  style: 'currency',
-                                  currency: 'VND'
-                              }).format(product.priceProduct)}</td>
+                                    style: 'currency',
+                                     currency: 'VND'
+                                    }).format(product.priceProduct)}</td>
                                   <td class="text-center align-middle">${product.category.name}</td>
                                   <td class="align-middle text-center ">
                                         <button data-id="${product.id}" class="btn btn-success btn_edit"  id="btn_edit" style="border-radius: 75px">
@@ -280,7 +280,7 @@
 
                    ` ;
 
-                      $("#tbListProducts tbody").append(str)
+                      $("#tbListProducts tbody").prepend(str)
 
                       App.IziToast.showSuccessAlert("Thêm sản phẩm thành công")
                         unbindAll();
@@ -303,7 +303,6 @@
                            })
                            $('#modalCreateProduct .modal-alert-danger').append(str);
                        }
-                       // App.IziToast.showErrorAlert("thêm sản phẩm thất bại")
                    })
 
               })

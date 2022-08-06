@@ -17,6 +17,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Boolean existsByUsername(String username);
 
+    Boolean existsByPhone(String phone);
+
+
     @Query("SELECT new com.cg.model.dto.UserDTO (" +
             "u.id, " +
             "u.urlImage, " +
@@ -24,11 +27,26 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "u.username, " +
             "u.password, " +
             "u.phone, " +
-            "u.locationRegion" +
+            "u.locationRegion," +
+            "u.role" +
             ") " +
             "FROM User AS u"
     )
     List<UserDTO> findAllUserDTO();
+    @Query("SELECT new com.cg.model.dto.UserDTO (" +
+            "u.id, " +
+            "u.fullName, " +
+            "u.username, " +
+            "u.password, " +
+            "u.phone, " +
+            "u.locationRegion" +
+            ") " +
+            "FROM User AS u " +
+            "WHERE u.id = :id"
+    )
+    UserDTO getUserDTOById();
+
+
 
 
     Boolean existsByUsernameAndIdIsNot(String username, Long id);

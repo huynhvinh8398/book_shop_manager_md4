@@ -56,6 +56,8 @@ public class User extends BaseEntity {
                 .setLocationRegion(locationRegion.toLocationRegionDTO());
     }
 
+
+
     @Override
     public String toString() {
         return "User{" +

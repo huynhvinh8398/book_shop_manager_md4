@@ -47,25 +47,25 @@
                                 <div class="table-responsive" data-pattern="priority-columns">
                                     <table id="tbListUsers" class="table table-hover table-bordered tbListUsers">
                                         <thead>
-                                        <tr style="background-color: #9ce9">
-                                            <th></th>
-                                            <th>#</th>
-                                            <th>Image</th>
-                                            <th>FullName</th>
-                                            <th>Email</th>
-                                            <th>Phone</th>
-                                            <th>Province</th>
-                                            <th>District</th>
-                                            <th>Ward</th>
-                                            <th>Address</th>
-                                        </tr>
+                                            <tr style="background-color: #9ce9" class="text-center align-middle">
+                                                <th></th>
+                                                <th>Id</th>
+                                                <th>Image</th>
+                                                <th>UserName</th>
+                                                <th>FullName</th>
+                                                <th>Phone</th>
+                                                <th>Province</th>
+                                                <th>District</th>
+                                                <th>Ward</th>
+                                                <th>Address</th>
+                                                <th>Role</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
 
                                         </tbody>
                                     </table>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
 </div>
 
 
-<div class="footer" style="text-align: right"></div>
+<div class="footer" style="text-align: right; background-color: rgb(0 0 0 / 20%);" ></div>
 <!--footer-->
 <th:block th:replace="/user/footer :: footerr" />
 <!--end footer-->
@@ -93,7 +93,6 @@
 <th:block th:replace="/user/modal-update :: modal_update" />
 
 <th:block th:replace="/user/temp_row_customer :: temp_row_customer" />
-
 <!--end script-->
 
 <script >
@@ -106,10 +105,10 @@
         let tempRowCustomer = $.validator.format($.trim($('#tempRowCustomer').val().toString()));
 
         function addRowCustomer() {
-            $('#tbListUsers tbody').prepend($(tempRowCustomer(user.id,user.id,user.urlImage, user.fullName, user.email, user.phone, user.locationRegion.provinceName, user.locationRegion.districtName, user.locationRegion.wardName, user.locationRegion.address)));
+            $('#tbListUsers tbody').prepend($(tempRowCustomer(user.id,user.id,user.urlImage,user.username, user.fullName, user.phone, user.locationRegion.provinceName, user.locationRegion.districtName, user.locationRegion.wardName, user.locationRegion.address,user.role.code)));
         }
         function replaceRowCustomer() {
-            $('#tr_' + user.id).replaceWith($(tempRowCustomer(user.id,user.id,user.urlImage, user.fullName,user.email, user.phone, locationRegion.provinceName, locationRegion.districtName, locationRegion.wardName, locationRegion.address)));
+            $('#tr_' + user.id).replaceWith($(tempRowCustomer(user.id,user.id,user.urlImage,user.username, user.fullName, user.phone, locationRegion.provinceName, locationRegion.districtName, locationRegion.wardName, locationRegion.address,user.role.code)));
         }
         function loadAllUser(){
             return $.ajax({
@@ -125,8 +124,7 @@
                     console.log(data);
                     $.each(data, (i,item)=>{
                         user = item;
-                        locationRegion = user.locationRegion;
-
+                        locationRegion = user.locationRegion
                         addRowCustomer();
                     })
                     handleShowFooter();
@@ -139,18 +137,24 @@
 
         function unbindAll(){
             $("#tbListUsers tbody tr").off();
+            $(".")
         }
 
         function handleShowFooter() {
-            $("#tbListUsers tbody tr").on('click', function () {
+            $("#tbListUsers tbody tr ").on('click', function () {
                 userId = $(this).attr('id').replace('tr_', '');
 
-                let tempFooter = $.validator.format($.trim($('#tempFooter').val().toString()));
+                    $('#tbListUsers tbody tr td span.select-tab').removeClass("selected").addClass("unselected");
+                    $(`#tbListUsers tbody tr#tr_${userId} td span.select-tab`).removeClass("unselected").addClass("selected");
+
+                    let tempFooter = $.validator.format($.trim($('#tempFooter').val().toString()));
 
                 $('.footer').html(tempFooter);
-
+               // unbindAll();
                 handleShowUpdate();
+
             });
+
         }
         function drawProvinces() {
             return $.ajax({
@@ -238,11 +242,24 @@
                 drawWards(districtId);
             });
         })
+        $("#provinceUp").on('change', ()=>{
+            let provinceId = $('#provinceUp').val();
+            drawDistricts(provinceId).then(() => {
+                let districtId = $('#districtUp').val();
+                drawWards(districtId);
+            });
+        })
 
         $("#district").on('change', () =>{
             let districtId = $('#district').val();
             drawWards(districtId);
         })
+        $("#districtUp").on('change', () =>{
+            let districtId = $('#districtUp').val();
+            drawWards(districtId);
+        })
+
+
 
         $('#addUser').on('click', function (){
             $('#modalCreateUser').modal('show')
@@ -258,13 +275,14 @@
 
             delete user.id;
             role.id = $('#role').val();
+            role.code = $("#role:selected").text();
+            user.role = role;
             user.fullName = $('#fullName').val();
             user.username = $('#userName').val();
             user.password = $("#password").val();
             // user.email = $('#email').val();
             user.phone = $('#phone').val();
             user.urlImage = 'user.png';
-            user.role = role;
             user.locationRegion = locationRegion;
 
             $.ajax({
@@ -287,15 +305,15 @@
 
                 $('#modalCreateUser').modal('hide');
 
-                App.SweetAlert.showSuccessAlert("Create user success");
+                App.SweetAlert.showSuccessAlert("Thêm mới user thành công");
 
-                unbindAll();
+                // unbindAll();
 
                 handleShowFooter();
 
             })
             .fail( (jqXHR) => {
-                App.SweetAlert.showErrorAlert("Create user Fail")
+                App.SweetAlert.showErrorAlert("Thêm mới user thất bại")
                 console.log(jqXHR)
                 $(' .modal-alert-danger').html('').removeClass('hide').addClass('show');
 
@@ -320,7 +338,129 @@
 
         })
 
+        function handleShowUpdate() {
+            $("button.update-modal").on('click', function () {
+                console.log(userId);
+                $.ajax({
+                    header: {
+                        "accept": "application/json",
+                        "content-type": "application/json"
+                    },
+                    type: "GET",
+                    url: "http://localhost:8080/api/users/" + userId ,
+                })
 
+                    .done((data) => {
+                        user = data;
+
+                        locationRegion = user.locationRegion;
+                        role = user.role;
+                        $('#userIdUp').val(user.id);
+                        $('#fullNameUp').val(user.fullName);
+                        $('#userNameUp').val(user.username);
+                        $('#phoneUp').val(user.phone);
+                        $('#roleUp').val(user.role);
+                        $('#provinceUp').val(locationRegion.provinceId);
+
+                        drawDistricts(locationRegion.provinceId).then(() => {
+                            $('#districtUp').val(locationRegion.districtId);
+
+                            drawWards(locationRegion.districtId).then(() => {
+                                $('#wardUp').val(locationRegion.wardId);
+                            });
+                        });
+
+                        $('#addressUp').val(locationRegion.address);
+
+                        $('#modalUpdateUser').modal('show')
+                    });
+
+            })
+        }
+        $("#btnUpdateUser").on('click',() =>{
+
+            delete locationRegion.id;
+            locationRegion.provinceId = $("#provinceUp").val();
+            locationRegion.provinceName = $('#provinceUp :selected').text();
+            locationRegion.districtId = $("#districtUp").val();
+            locationRegion.districtName = $("#districtUp :selected").text();
+            locationRegion.wardId = $("#wardUp").val();
+            locationRegion.wardName = $("#wardUp :selected").text();
+            locationRegion.address = $("#addressUp").val();
+            role.id = $("#roleUp").val();
+            user.role =role;
+            user.password = "12345";
+
+            user.id = $("#userIdUp").val();
+            user.locationRegion =locationRegion;
+            user.fullName = $("#fullNameUp").val();
+            user.username = $("#userNameUp").val();
+            user.phone = $("#phoneUp").val();
+            user.urlImage = 'user.png';
+
+            $.ajax({
+                headers: {
+                    accept: "application/json",
+                    "content-type": "application/json"
+                },
+                type: "PUT",
+                url: "http://localhost:8080/api/users/update/",
+                data: JSON.stringify(user)
+            })
+            .done((data) =>{
+                user = data;
+                role = user.role;
+                locationRegion = user.locationRegion
+                console.log(data)
+
+                replaceRowCustomer();
+
+                $('#modalUpdateUser').modal('hide');
+
+                App.SweetAlert.showSuccessAlert("Cập nhật user thành công");
+
+                // unbindAll();
+
+                handleShowFooter();
+            })
+                .fail( (jqXHR) => {
+                    App.SweetAlert.showErrorAlert("Cập nhật user thất bại")
+                    console.log(jqXHR)
+                    $(' .modal-alert-danger').html('').removeClass('hide').addClass('show');
+
+                    if (jqXHR.responseJSON.message) {
+                        let msg = jqXHR.responseJSON.message;
+
+                        let str = `<label id="message-error" class="error" for="message">${msg}</label>`;
+
+                        $('#modalUpdateUser .modal-alert-danger').append(str);
+                    }
+                    else if (jqXHR.responseJSON) {
+                        $.each(jqXHR.responseJSON, (key, item) => {
+                            let str = `<label id="${key}-error" class="error" for="${key}">${item}</label>`;
+                            $("#" + key).addClass("error");
+
+                            $('#modalUpdateUser .modal-alert-danger').append(str);
+                        })
+                    }
+                } )
+
+        })
+
+
+        $("#modalCreateUser").on("hidden.bs.modal", function () {
+            $("#frmCreateUser")[0].reset();
+        });
+
+        function handleCloseModalCreate() {
+            $("#modalCreateUser").on("hidden.bs.modal", () => {
+                $('#modalCreateUser .modal-alert-danger').empty().removeClass('show').addClass('hide');
+            })
+        }
+
+        handleCloseModalCreate();
+
+loadAllUser();
 
 
 </script>
