@@ -1,5 +1,6 @@
 package com.cg.service.user;
 
+import com.cg.model.Product;
 import com.cg.model.User;
 import com.cg.model.dto.UserDTO;
 import com.cg.service.IGeneralService;
@@ -31,6 +32,10 @@ public interface IUserService extends IGeneralService<User>, UserDetailsService 
 
     Boolean existsByUserAndIdIsNot(String username, Long id);
 
+    void deleteUserSoft(User user);
+    void deleteUserById(Long id);
+
+    Optional<UserDTO> findUserDTOById(Long id);
 
 
 }

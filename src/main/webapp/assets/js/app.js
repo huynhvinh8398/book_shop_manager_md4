@@ -29,6 +29,19 @@ class App {
                 cancelButtonText: 'Huỷ'
             });
         }
+        static showConfirmDeleteUser() {
+            return Swal.fire({
+                title: 'Bạn có muốn xoá tạm thời user này?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Có, Xoá ngay!',
+                cancelButtonText: 'Huỷ'
+            });
+        }
+
+
 
     }
     static IziToast = class {
@@ -79,7 +92,7 @@ class LocationRegion {
 }
 
 class User{
-    constructor(id,username, password, fullName, phone, locationRegion, urlImage,role) {
+    constructor(id,username, password, fullName, phone, locationRegion, urlImage,role,deleted = 0) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -88,6 +101,7 @@ class User{
         this.locationRegion = locationRegion;
         this.urlImage = urlImage;
         this.role = role;
+       this.deleted = deleted;
 
     }
 

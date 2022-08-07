@@ -3,7 +3,9 @@ package com.cg.repository;
 import com.cg.model.User;
 import com.cg.model.dto.UserDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -56,7 +58,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT NEW com.cg.model.dto.UserDTO (u.id, u.username) FROM User u WHERE u.username = ?1")
     Optional<UserDTO> findUserDTOByUsername(String username);
 
-//    @Query("SELECT NEW com.cg.model.dto.UserDTO () FROM User AS u" )
+    @Modifying
+    @Query("UPDATE User AS u set u.deleted = true WHERE u.id= :id")
+    void deleteUserById(@Param("id") Long id);
+    Optional<UserDTO> findUserDTOById(Long id);
 
 
 

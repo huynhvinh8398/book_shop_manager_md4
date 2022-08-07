@@ -54,15 +54,6 @@ public class ProductRestController {
         }
         return new ResponseEntity<>(productOptional.get(),HttpStatus.OK);
     }
-//    @GetMapping("/category")
-//    public ResponseEntity<?> getCategory() {
-//
-//        List<CategoryDTO> categoryDTOS = categoryService.findAllCategoryDTO();
-//        if (categoryDTOS == null) {
-//            return new ResponseEntity<>("Danh sách trống!", HttpStatus.NO_CONTENT);
-//        }
-//        return new ResponseEntity<>(categoryDTOS, HttpStatus.OK);
-//    }
 
     @PostMapping("/create")
     public ResponseEntity<?> doCreate(@Validated @RequestBody ProductDTO productDTO, BindingResult bindingResult) {

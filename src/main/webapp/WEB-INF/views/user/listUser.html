@@ -127,13 +127,31 @@
                         locationRegion = user.locationRegion
                         addRowCustomer();
                     })
+
                     handleShowFooter();
+                    handleshowConfirmDelete();
 
                 })
                 .fail((jqXHR) => {
                     console.log(jqXHR);
                 })
         }
+
+        // function getUserById(userId) {
+        //     return $.ajax({
+        //         "type": "GET",
+        //         url: "http://localhost:8080/api/users/" + userId
+        //     })
+        //         .done((data) => {
+        //             console.log(data);
+        //             user = data;
+        //         })
+        //
+        //         .fail((err) => {
+        //             App.SweetAlert.showErrorAlert("fail id user");
+        //             console.log(err);
+        //         })
+        // }
 
         function unbindAll(){
             $("#tbListUsers tbody tr").off();
@@ -152,7 +170,7 @@
                 $('.footer').html(tempFooter);
                // unbindAll();
                 handleShowUpdate();
-
+                handleshowConfirmDelete();
             });
 
         }
@@ -447,20 +465,60 @@
 
         })
 
+        function handleshowConfirmDelete(){
+                    $('button.deleted').on('click', function () {
+                        App.SweetAlert.showConfirmDeleteUser()
+                            .then((result) => {
+                                if (result.isConfirmed) {
+                                    $.ajax({
+                                        "headers": {
+                                            "accept": "application/json",
+                                            "content-type": "application/json"
+                                        },
+                                        "type": "DELETE",
+                                        "url": "http://localhost:8080/api/users/delete/" + userId,
+                                        "data": JSON.stringify(user)
+                                    })
+                                        .done((data) => {
+                                            $('#tr_' + userId).remove();
+                                            console.log(data)
+                                            App.SweetAlert.showSuccessAlert("Xóa Thành Công")
 
-        $("#modalCreateUser").on("hidden.bs.modal", function () {
-            $("#frmCreateUser")[0].reset();
-        });
+                                        })
+                                        .fail((error) => {
+                                            console.log(error)
+                                            App.SweetAlert.showErrorAlert('Xóa thất bại');
+                                        });
+                                }
+                            })
+                    })
+                }
 
-        function handleCloseModalCreate() {
-            $("#modalCreateUser").on("hidden.bs.modal", () => {
-                $('#modalCreateUser .modal-alert-danger').empty().removeClass('show').addClass('hide');
-            })
-        }
+                $("#modalCreateUser").on("hidden.bs.modal", function () {
+                    $("#frmCreateUser")[0].reset();
+                });
+                $("#modalUpdateUser").on("hidden.bs.modal", function () {
+                    $("#frmUpdateUser")[0].reset();
+                });
 
-        handleCloseModalCreate();
 
-loadAllUser();
+                function handleCloseModalCreate() {
+                    $("#modalCreateUser").on("hidden.bs.modal", () => {
+                        $('#modalCreateUser .modal-alert-danger').empty().removeClass('show').addClass('hide');
+                    })
+                }
+
+                function handleCloseModalUpdate() {
+                    $("#modalUpdateUser").on("hidden.bs.modal", () => {
+                        $('#modalUpdateUser .modal-alert-danger').empty().removeClass('show').addClass('hide');
+                    })
+                }
+
+                handleCloseModalCreate();
+
+                handleCloseModalUpdate();
+
+    loadAllUser();
 
 
 </script>

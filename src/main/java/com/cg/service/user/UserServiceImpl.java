@@ -82,30 +82,23 @@ public class UserServiceImpl implements IUserService{
         return userRepository.existsByUsernameAndIdIsNot(username, id);
     }
 
-//    @Override
-//    public Boolean existsById(Long id) {
-//        return userRepository.existsById(id);
-//    }
-//
-//    @Override
-//    public Boolean existsByUsername(String username) {
-//        return userRepository.existsByUsername(username);
-//    }
-//
-//    @Override
-//    public Boolean existsByUserAndIdIsNot(String username, Long id) {
-//        return null;
-//    }
-//
-//    @Override
-//    public User getByEmail(String email) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Optional<User> findByUsername(String username) {
-//        return Optional.empty();
-//    }
+    @Override
+    public void deleteUserSoft(User user) {
+        user.setDeleted(true);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUserById(Long id) {
+        userRepository.deleteUserById(id);
+
+    }
+
+    @Override
+    public Optional<UserDTO> findUserDTOById(Long id) {
+        return userRepository.findUserDTOById(id);
+    }
+
 
     @Override
     public User save(User user) {
