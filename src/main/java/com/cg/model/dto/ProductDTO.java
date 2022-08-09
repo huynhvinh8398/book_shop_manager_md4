@@ -38,15 +38,15 @@ public class ProductDTO  {
      private CategoryDTO category;
 
     @NotEmpty(message = "Số lượng sách không được để trống")
-    @Pattern(regexp = "^[1-9]+$", message = "số lượng chỉ nhập số và lớn 0")
+    @Pattern(regexp = "^[0-9]+$", message = "số lượng chỉ nhập số ")
     private String amountProduct;
 
     @NotEmpty(message = "Giá sách không được để trống")
-    @Pattern(regexp = "^[1-9]+$", message = "Giá chỉ nhập số và lớn hơn 0")
+    @Pattern(regexp = "^[0-9]+$", message = "Giá chỉ nhập số")
     @Length(max = 6,message = "giá tiền vượt quá giá hạn 999999")
     private String priceProduct;
 
-    @Size(max = 10000, message = "Đường dẫn ảnh quá dài vượt quá 10000 kí tự!")
+//    @Size(max = 10000, message = "Đường dẫn ảnh quá dài vượt quá 10000 kí tự!")
     @NotBlank(message = "Đường dẫn ảnh không được để trống")
     private String image;
 

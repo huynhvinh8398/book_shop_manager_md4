@@ -39,7 +39,7 @@
 
             <!-- End Page Title -->
 
-            <section class="section dashboard">
+            <section class="section dashboard" style=" font-family: 'Open Sans'">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card-box">
@@ -321,7 +321,7 @@
                     "content-type" : "application/json"
                 },
                 type : "PUT",
-                url:"http://localhost:8080/api/products/update/" +product.id,
+                url:"http://localhost:8080/api/products/update/" +productId,
                 data: JSON.stringify(product)
              })
                 .done((data) =>{
@@ -368,14 +368,41 @@
                 .fail((jqXHR) =>{
                     $('#modalUpdateProduct .modal-alert-danger ').html('').removeClass('hide').addClass('show');
 
-                     if (jqXHR.responseJSON) {
-                        let str = '';
-                        $.each(jqXHR.responseJSON, (key, item) => {
-                            str += `<label for="${key}" id="${key}-error" class="error">${item}</label><br>`;
-                        })
+                    if (jqXHR.status === 401) {
+                        let msg = "Vui lòng đăng nhập !!";
+
+                        let str = `<label id="message-error" class="error" for="message">${msg}</label>`;
+
                         $('#modalUpdateProduct .modal-alert-danger').append(str);
                     }
-                    // App.IziToast.showErrorAlert("Cập nhật sản phẩm thất bại")
+                    else {
+                        if (jqXHR.status === 403) {
+                            let msg = "Bạn không đủ quyền để thực hiện chức năng này !!";
+
+                            let str = `<label id="message-error" class="error" for="message">${msg}</label>`;
+
+                            $('#modalUpdateProduct .modal-alert-danger').append(str);
+                        }
+                        else {
+                            if (jqXHR.responseJSON.message) {
+                                let msg = jqXHR.responseJSON.message;
+
+                                let str = `<label id="message-error" class="error" for="message">${msg}</label>`;
+
+                                $('#modalUpdateProduct .modal-alert-danger').append(str);
+                            }
+                            else if (jqXHR.responseJSON) {
+                                $.each(jqXHR.responseJSON, (key, item) => {
+                                    let str = `<label id="${key}-error" class="error" for="${key}">${item}</label>`;
+                                    $("#" + key).addClass("error");
+
+                                    $('#modalUpdateProduct .modal-alert-danger').append(str);
+                                })
+                            }
+                        }
+                    }
+
+
                 })
             })
 
@@ -403,6 +430,9 @@
                     $('#modalCreateProduct .modal-alert-danger').empty().removeClass('show').addClass('hide');
                 })
             }
+
+
+
             function handleCloseModalUpdate() {
                 $("#modalUpdateProduct").on("hidden.bs.modal", () => {
                     $('#modalUpdateProduct .modal-alert-danger').empty().removeClass('show').addClass('hide');

@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ public class UserRestController {
     @GetMapping()
     public ResponseEntity<?> findAllUser() {
 
-        List<UserDTO> userDTOS = userService.findAllUserDTO();
+        List<UserDTO> userDTOS = userService.findAllUserDTOAnDeletedIsFalse();
 
         return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
@@ -54,7 +55,7 @@ public class UserRestController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> doCreate(@Validated @RequestBody UserDTO userDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> doCreate(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) {
         new UserDTO().validate(userDTO, bindingResult);
         if (bindingResult.hasErrors()) {
             return appUtil.mapErrorToResponse(bindingResult);
@@ -91,6 +92,7 @@ public class UserRestController {
     }
 
     @PutMapping("/update")
+//    @PreAuthorize("hasAnyAuthority('ADMIN')")
     private ResponseEntity<?> doUpdate(@Validated @RequestBody UserDTO userDTO, BindingResult bindingResult) {
         new UserDTO().validate(userDTO, bindingResult);
         if (bindingResult.hasFieldErrors()) {
@@ -133,7 +135,7 @@ public class UserRestController {
 
         if (user.isPresent()) {
 
-//            user.get().setDeleted(true);
+            user.get().setDeleted(true);
 
             userService.deleteUserSoft(user.get());
 

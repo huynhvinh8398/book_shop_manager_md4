@@ -97,6 +97,9 @@ public class UserDTO implements Validator {
         this.locationRegion = locationRegion.toLocationRegionDTO();
         this.role = role.toRoleDTO();
     }
+
+
+
     @Override
     public boolean supports(Class<?> aClass) {
         return UserDTO.class.isAssignableFrom(aClass);
@@ -125,6 +128,7 @@ public class UserDTO implements Validator {
             errors.rejectValue("password", "password.isEmpty", "Vui Lòng Nhập Mật Khẩu Người Dùng");
             return;
         }
+
 
         if ((phoneCheck.trim()).isEmpty()) {
             errors.rejectValue("phone", "phone.isEmpty", "Vui Lòng Nhập Số Điện Thoại Người Dùng");

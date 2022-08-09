@@ -10,6 +10,7 @@
     <th:block th:replace="/layout/head :: head" />
 </head>
 
+
 <body>
 <div id="wrapper" style="margin-bottom: 230px">
     <!--header-->
@@ -38,7 +39,7 @@
         </div>
         <!-- End Page Title -->
 
-        <section class="section dashboard">
+        <section class="section dashboard" style=" font-family: 'Open Sans'">
             <div class="row">
                 <div class="col-12">
                     <div class="card-box">
@@ -110,6 +111,7 @@
         function replaceRowCustomer() {
             $('#tr_' + user.id).replaceWith($(tempRowCustomer(user.id,user.id,user.urlImage,user.username, user.fullName, user.phone, locationRegion.provinceName, locationRegion.districtName, locationRegion.wardName, locationRegion.address,user.role.code)));
         }
+
         function loadAllUser(){
             return $.ajax({
                 "headers": {
@@ -119,22 +121,22 @@
                 "type": "GET",
                 "url": "http://localhost:8080/api/users"
             })
-                .done((data) =>{
-                    $("#tbListUsers tbody").html("");
-                    console.log(data);
-                    $.each(data, (i,item)=>{
-                        user = item;
-                        locationRegion = user.locationRegion
-                        addRowCustomer();
-                    })
-
-                    handleShowFooter();
-                    handleshowConfirmDelete();
-
+            .done((data) =>{
+                $("#tbListUsers tbody").html("");
+                console.log(data);
+                $.each(data, (i,item)=>{
+                    user = item;
+                    locationRegion = user.locationRegion
+                    addRowCustomer();
                 })
-                .fail((jqXHR) => {
-                    console.log(jqXHR);
-                })
+
+                handleShowFooter();
+                handleshowConfirmDelete();
+
+            })
+            .fail((jqXHR) => {
+                console.log(jqXHR);
+            })
         }
 
         // function getUserById(userId) {
@@ -377,7 +379,10 @@
                         $('#fullNameUp').val(user.fullName);
                         $('#userNameUp').val(user.username);
                         $('#phoneUp').val(user.phone);
-                        $('#roleUp').val(user.role);
+                        $('#roleUp').val(role.id);
+
+                        $("#roleUp:selected").text(role.code);
+
                         $('#provinceUp').val(locationRegion.provinceId);
 
                         drawDistricts(locationRegion.provinceId).then(() => {
@@ -406,6 +411,8 @@
             locationRegion.wardName = $("#wardUp :selected").text();
             locationRegion.address = $("#addressUp").val();
             role.id = $("#roleUp").val();
+            // role.code = $("#roleUp:selected").text();
+
             user.role =role;
             user.password = "12345";
 
@@ -442,7 +449,7 @@
                 handleShowFooter();
             })
                 .fail( (jqXHR) => {
-                    App.SweetAlert.showErrorAlert("Cập nhật user thất bại")
+                    // App.SweetAlert.showErrorAlert("Cập nhật user thất bại")
                     console.log(jqXHR)
                     $(' .modal-alert-danger').html('').removeClass('hide').addClass('show');
 
@@ -483,7 +490,6 @@
                                             $('#tr_' + userId).remove();
                                             console.log(data)
                                             App.SweetAlert.showSuccessAlert("Xóa Thành Công")
-
                                         })
                                         .fail((error) => {
                                             console.log(error)

@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface IUserService extends IGeneralService<User>, UserDetailsService {
 
-    List<UserDTO> findAllUserDTO();
+    List<UserDTO> findAllUserDTOAnDeletedIsFalse();
 
     User getByUsername(String username);
 

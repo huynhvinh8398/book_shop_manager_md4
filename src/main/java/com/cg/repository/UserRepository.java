@@ -1,6 +1,7 @@
 package com.cg.repository;
 
 import com.cg.model.User;
+import com.cg.model.dto.ProductDTO;
 import com.cg.model.dto.UserDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -22,27 +23,29 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByPhone(String phone);
 
 
+    @Query("SELECT NEW com.cg.model.dto.UserDTO(" +
+                "u.id, " +
+                "u.urlImage," +
+                "u.fullName, " +
+                "u.username, " +
+                "u.password, " +
+                "u.phone, " +
+                "u.locationRegion," +
+                "u.role)" +
+            "FROM User u  WHERE u.deleted = false ")
+    List<UserDTO> findAllUserDTOAnDeletedIsFalse();
+    List<User> findAllByDeletedIsFalse();
+
+
     @Query("SELECT new com.cg.model.dto.UserDTO (" +
             "u.id, " +
-            "u.urlImage, " +
+            "u.urlImage," +
             "u.fullName, " +
             "u.username, " +
             "u.password, " +
             "u.phone, " +
             "u.locationRegion," +
-            "u.role" +
-            ") " +
-            "FROM User AS u"
-    )
-    List<UserDTO> findAllUserDTO();
-    @Query("SELECT new com.cg.model.dto.UserDTO (" +
-            "u.id, " +
-            "u.fullName, " +
-            "u.username, " +
-            "u.password, " +
-            "u.phone, " +
-            "u.locationRegion" +
-            ") " +
+            "u.role)" +
             "FROM User AS u " +
             "WHERE u.id = :id"
     )

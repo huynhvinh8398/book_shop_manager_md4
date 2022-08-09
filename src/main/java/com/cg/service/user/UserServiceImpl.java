@@ -43,8 +43,8 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public List<UserDTO> findAllUserDTO() {
-        return userRepository.findAllUserDTO();
+    public List<UserDTO> findAllUserDTOAnDeletedIsFalse() {
+        return userRepository.findAllUserDTOAnDeletedIsFalse();
     }
 
     @Override

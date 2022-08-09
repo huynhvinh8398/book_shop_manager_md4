@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/", "/api/auth/login", "/api/auth/register", "/login").permitAll()
-                .antMatchers("/transfers").hasAnyAuthority("ADMIN") // phân quyền admin mới vào được
+                .antMatchers("/api/users/update","/api/products/update").hasAnyAuthority("ADMIN") // phân quyền admin mới vào được
                 .antMatchers("/assets/**").permitAll()
 //                .antMatchers(
 //                        "/v2/api-docs",
