@@ -92,7 +92,6 @@ public class UserRestController {
     }
 
     @PutMapping("/update")
-//    @PreAuthorize("hasAnyAuthority('ADMIN')")
     private ResponseEntity<?> doUpdate(@Validated @RequestBody UserDTO userDTO, BindingResult bindingResult) {
         new UserDTO().validate(userDTO, bindingResult);
         if (bindingResult.hasFieldErrors()) {
